@@ -6,11 +6,66 @@ def get_price(crypto, exchange):
             url = f"https://api.binance.com/api/v3/ticker/price?symbol={crypto}USDT"
             response = requests.get(url)
             coin_price = response.json()["price"]
+            print("Binance: " + coin_price + " - " + crypto + "USD")
             return float(coin_price)
     elif exchange == "Coinbase":
         url = f"https://api.coinbase.com/v2/prices/{crypto}-USD/spot"
         response = requests.get(url)
         coin_price = response.json()["data"]["amount"]
+        print("Coinbase: " + coin_price + " - " + crypto + "USD")
+        return float(coin_price)
+    elif exchange == "Kraken":
+        pair_code = None
+        if crypto == "BTC":
+            pair_code = "XXBTZ"
+        elif crypto == "ETH":
+            pair_code = "XETHZ"
+        
+        url = f"https://api.kraken.com/0/public/Ticker?pair={crypto}USD"
+        response = requests.get(url)    
+        
+        if pair_code is None:
+            coin_price = response.json()["result"][f"{crypto}USD"]["c"][0]
+        else:
+            coin_price = response.json()["result"][f"{pair_code}USD"]["c"][0]
+
+        print("Kraken: " + coin_price + " - " + crypto + "USD")
+        return float(coin_price)
+    elif exchange == "Bitfinex":
+        url = f"https://api.bitfinex.com/v1/ticker/{crypto}usd"
+        response = requests.get(url)
+        coin_price = response.json()["last_price"]
+        print("Bitfinex: " + coin_price + " - " + crypto + "USD")
+        return float(coin_price)
+    elif exchange == "Bittrex":
+        url = f"https://api.bittrex.com/v3/markets/{crypto}-USD/ticker"
+        response = requests.get(url)
+        coin_price = response.json()["lastTradeRate"]
+        print("Bittrex: " + coin_price + " - " + crypto + "USD")
+        return float(coin_price)
+    elif exchange == "Huobi":
+        crypto = crypto.lower()
+        url = f"https://api.huobi.com/market/detail/merged?symbol={crypto}usdt"
+        response = requests.get(url)
+        coin_price = response.json()["tick"]["close"]
+        print("Huobi: " + coin_price + " - " + crypto + "USD")
+        return float(coin_price)
+    elif exchange == "Bitstamp":
+        crypto = crypto.lower()
+        url = f"https://www.bitstamp.net/api/v2/ticker/{crypto}usd/"
+        response = requests.get(url)
+        coin_price = response.json()["last"]
+        print("Bitstamp: " + coin_price + " - " + crypto + "USD")
+        return float(coin_price)
+    elif exchange == "Cex.io":
+        url = f"https://cex.io/api/last_price/{crypto}/USD"
+        response = requests.get(url)
+        coin_price = response.json()["lprice"]
+        print("Cex.io: " + coin_price + " - " + crypto + "USD")
+        return float(coin_price)
+    elif exchange == "test":
+        coin_price = 5
+        print(coin_price)
         return float(coin_price)
     else:
         raise Exception("Exchange not supported")
@@ -69,6 +124,6 @@ def monitor_prices(cryptos, exchanges, threshold_percentage):
 
 if __name__ == "__main__":
     cryptos = ["SOL", "ADA"]
-    exchanges = ["Binance", "Coinbase"]
-    threshold_percentage = 2 # notify if price has a difference of 2%
+    exchanges = ["Binance", "Coinbase", "Kraken", "Bitfinex", "Bittrex", "Bitstamp", "Cex.io", "test"]
+    threshold_percentage = 1 # notify if price has a difference of 5%
     monitor_prices(cryptos, exchanges, threshold_percentage)
