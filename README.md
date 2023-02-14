@@ -1,4 +1,4 @@
-# Crypt-Arbitrage Tool
+# Crypto-Arbitrage Tool
 
 This Python tool allows you to perform crypto arbitrage between multiple exchanges. By taking advantage of price differences between exchanges, you can buy low and sell high to make a profit.
 
@@ -16,4 +16,4 @@ This Python tool allows you to perform crypto arbitrage between multiple exchang
 
 ## Modules
 
-All the modules required for the program to run are included in the arbitrage_modules directory.
+All the modules required for the program to run are included in the `arbitrage_modules` directory.
